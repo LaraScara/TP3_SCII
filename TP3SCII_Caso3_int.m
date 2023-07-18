@@ -1,7 +1,7 @@
-% Caso de estudio 3 - P閚dulo
+% Caso de estudio 3 - P茅ndulo
 close all; clear all; clc;
 
-% Par醡etros
+% Par谩metros
 m = 0.1; 
 F = 0.1; 
 l = 1.6; 
@@ -12,7 +12,7 @@ tf = 15;
 
 % Matrices ; X = [delta delta_p phi phi_p]
 A = [0 1 0 0 ; 0 (-F/M) (-m*g/M) 0 ; 0 0 0 1 ; 0 (-F/(l*M)) (((M+m)*-g)/(l*M)) 0];
-B = [0 ; (1/M) ; 0 ; (-1/(l*M))];
+B = [0 ; (1/M) ; 0 ; (1/(l*M))];
 C = [1 0 0 0; 0 0 1 0];
 D = 0;
 
@@ -22,7 +22,7 @@ rank(Co) % = 4 por ende es controlable
 Ob = obsv(A, C);
 rank(Ob) % = 4 por ende es observable
 
-% Discretizaci髇 del sistema
+% Discretizaci贸n del sistema
 sys = ss(A,B,C,D);
 sys_d = c2d(sys,tm,'zoh');
 Ad = sys_d.a; 
@@ -48,15 +48,15 @@ Ka2 = dlqr(Aa,Ba,Q2,R2);
 K_i2 = -Ka2(5); 
 K2 = Ka2(1:4);
 
-% Implementaci髇 de funciones a usar
+% Implementaci贸n de funciones a usar
 KMAX = tf/tm;
 dt = tm/10; 
 t = 0:dt:tf;
 Vh = tm/dt;
 u = [];
 i = 1;
-referencia1 = 10;  % posici髇 delta de referencia 1
-referencia2 = 0;   % posici髇 delta de referencia 2
+referencia1 = 10;  % posici贸n delta de referencia 1
+referencia2 = 0;   % posici贸n delta de referencia 2
 n = round(tf/dt);
 ref = zeros(1,n);  
 masa = zeros(1,n); 
@@ -79,7 +79,7 @@ X = zeros(4,round(tf/dt));
 X(:,1) = [0; 0; pi; 0];      
 x_int = [0 0 pi 0]; 
 
-% Iteraci髇
+% Iteraci贸n
 for ki=1:KMAX
     %Dependiendo de la masa, se elige el controlador
     if masa(i)<0.2
@@ -111,26 +111,26 @@ for ki=1:KMAX
 end
 u(i) = u_k(ki); 
 
-% Gr醘icas
+% Gr谩ficas
 figure;hold on;
 plot(t,X(1,:));grid on; hold on;
 title('Desplazamiento del carro');
 xlabel('Tiempo [s]');
-ylabel('Posici髇 [m]');
+ylabel('Posici贸n [m]');
 legend('(t)','referencia');
 plot(t,ref,'k');
 
 figure;
 plot(t,X(3,:));grid on;
-title('羘gulo del p閚dulo');
+title('脕ngulo del p茅ndulo');
 xlabel('Tiempo [s]');
-ylabel('羘gulo [rad]');
+ylabel('脕ngulo [rad]');
 legend('?(t)');
 ylim([0 5]);
 
 figure;
 plot(t,u);grid on;
-title('Acci髇 de control');
+title('Acci贸n de control');
 xlabel('Tiempo [s]');
 legend('u(t)');
 ylim ([-30 30]);
