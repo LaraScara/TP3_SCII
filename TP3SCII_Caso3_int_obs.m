@@ -1,7 +1,7 @@
-% Caso de estudio 3 - P閚dulo
+% Caso de estudio 3 - P茅ndulo
 % close all; clear all; clc;
 
-% Par醡etros
+% Par谩metros
 m = 0.1; 
 F = 0.1; 
 l = 1.6; 
@@ -22,7 +22,7 @@ rank(Co) % = 4 por ende es controlable
 Ob = obsv(A, C);
 rank(Ob) % = 4 por ende es observable
 
-% Discretizaci髇 del sistema
+% Discretizaci贸n del sistema
 sys = ss(A,B,C,D);
 sys_d = c2d(sys,tm,'zoh');
 Ad = sys_d.a; 
@@ -46,8 +46,8 @@ R1 = 500;
 Ka1 = dlqr(Aa,Ba,Q1,R1);
 K_i1 = -Ka1(5); 
 K1 = Ka1(1:4);
-Qo1 = (diag([0.1 5000 2000 0.001])); 
-Ro1 = (diag([4000 300]));
+Qo1 = (diag([0.1 500 200 0.01])); 
+Ro1 = (diag([400 30]));
 Ko1 = dlqr(Ao,Bo,Qo1,Ro1);
 % Segundo controlador para la masa 10 veces mayor y su observador
 Q2 = diag([1 1000 50000 1 0.0001]);   
@@ -59,15 +59,15 @@ Qo2 = (diag([1 100 300 0.1]));
 Ro2 = (diag([100 10]));
 Ko2 = dlqr(Ao,Bo,Qo2,Ro2);
 
-% Implementaci髇 de funciones a usar
+% Implementaci贸n de funciones a usar
 KMAX = tf/tm;
 dt = tm/10; 
 t = 0:dt:tf;
 Vh = tm/dt;
 u = [];
 i = 1;
-referencia1 = 10;  % posici髇 delta de referencia 1
-referencia2 = 0;   % posici髇 delta de referencia 2
+referencia1 = 10;  % posici贸n delta de referencia 1
+referencia2 = 0;   % posici贸n delta de referencia 2
 n = round(tf/dt);
 ref = zeros(1,n);  
 masa = zeros(1,n); 
@@ -92,7 +92,7 @@ x_int = [0 0 pi 0];
 err = 0; 
 Xhat = [0; 0; pi; 0];
 
-% Iteraci髇
+% Iteraci贸n
 for ki=1:KMAX
     %Dependiendo de la masa, se elige el controlador
     if masa(i)<0.2
@@ -131,26 +131,26 @@ u(i) = u_k(ki);
 
 color = 'b';
 
-% Gr醘icas
+% Gr谩ficas
 figure(1);hold on;
 plot(t,X(1,:),color);grid on; hold on;
 title('Desplazamiento del carro');
 xlabel('Tiempo [s]');
-ylabel('Posici髇 [m]');
+ylabel('Posici贸n [m]');
 legend('con observador', 'sin observador', 'referencia');
 plot(t,ref,'k');
 
 figure(2); hold on;
 plot(t,X(3,:),color);grid on;
-title('羘gulo del p閚dulo');
+title('脕ngulo del p茅ndulo');
 xlabel('Tiempo [s]');
-ylabel('羘gulo [rad]');
+ylabel('脕ngulo [rad]');
 legend('con observador', 'sin observador');
 ylim([0 5]);
 
 figure(3); hold on;
 plot(t,u,color);grid on;
-title('Acci髇 de control');
+title('Acci贸n de control');
 xlabel('Tiempo [s]');
 legend('con observador', 'sin observador');
 ylim ([-20 40]);
